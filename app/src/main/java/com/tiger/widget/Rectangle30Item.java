@@ -3,7 +3,8 @@ package com.tiger.widget;
 public class Rectangle30Item {
 
     private String time;
-    private double ton;
+    private double tonLeft;
+    private double tonRight;
 
     public String getTime() {
         return time;
@@ -13,11 +14,19 @@ public class Rectangle30Item {
         this.time = time;
     }
 
-    public double getTon() {
-        return ton;
+    public double getTonLeft() {
+        return tonLeft;
     }
 
-    public void setTon(double ton) {
-        this.ton = ton;
+    public void setTonLeft(double tonLeft) {
+        this.tonLeft = tonLeft;
+    }
+
+    public double getTonRight() {
+        return tonRight;
+    }
+
+    public void setTonRight(double tonRight) {
+        this.tonRight = tonRight;
     }
 }

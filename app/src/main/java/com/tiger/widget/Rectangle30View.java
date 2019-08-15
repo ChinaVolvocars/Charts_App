@@ -35,6 +35,7 @@ public class Rectangle30View extends View {
 
 
     private int rectangleColor = Color.parseColor("#50ABFF");
+    private int rectangleRightColor = Color.parseColor("#1CCC50");
     private int dottedLineColor = Color.parseColor("#50abff");
     private int dashedColor = Color.parseColor("#e9e9e9");
     private int bottomTextColor = Color.parseColor("#333333");
@@ -49,6 +50,7 @@ public class Rectangle30View extends View {
     Paint bottomLinePaint = new Paint();
     private Paint textPaint = new Paint();
     private Paint rectanglePaint = new Paint();
+    private Paint rectanglePaintRight = new Paint();
 
     private int mHeight, mWidth;
     private int itemCount = 10;
@@ -82,7 +84,9 @@ public class Rectangle30View extends View {
         for (int i = 0; i < itemCount; i++) {
             materials30Item = new Rectangle30Item();
             double s = random.nextInt(26) % (maxTemp - minTemp + 1) + minTemp;
-            materials30Item.setTon(s);
+            double s2 = random.nextInt(26) % (maxTemp - minTemp + 1) + minTemp;
+            materials30Item.setTonLeft(s);
+            materials30Item.setTonRight(s2);
             materials30Item.setTime("07-" + i);
             itemList.add(materials30Item);
         }
@@ -113,6 +117,10 @@ public class Rectangle30View extends View {
         rectanglePaint.setStyle(Paint.Style.FILL);
         rectanglePaint.setColor(rectangleColor);
         rectanglePaint.setAntiAlias(true);
+
+        rectanglePaintRight.setStyle(Paint.Style.FILL);
+        rectanglePaintRight.setColor(rectangleRightColor);
+        rectanglePaintRight.setAntiAlias(true);
 
 
     }
@@ -162,8 +170,10 @@ public class Rectangle30View extends View {
 
         ArrayList<Double> temp = new ArrayList<>();
         for (int i = 0; i < itemCount; i++) {
-            double countTon = itemList.get(i).getTon();
-            temp.add(countTon);
+            double tonLeft = itemList.get(i).getTonLeft();
+            double tonRight = itemList.get(i).getTonRight();
+            temp.add(tonLeft);
+            temp.add(tonRight);
         }
 
         maxTemp = Collections.max(temp);
@@ -173,11 +183,22 @@ public class Rectangle30View extends View {
         for (int i = 0; i < itemCount; i++) {
             int left = (int) dp2px(10) + MARGIN_LEFT_ITEM + i * (BOTTOM_TEXT_WIDTH + BOTTOM_TEXT_MARGIN_LIFT + BOTTOM_TEXT_MARGIN_RIGHT);
             int right = left + (BOTTOM_TEXT_WIDTH + BOTTOM_TEXT_MARGIN_LIFT + BOTTOM_TEXT_MARGIN_RIGHT) - (int) dp2px(10) * 2;
-            Point point = calculateTempPoint(left, right, (int) itemList.get(i).getTon());
+
+            int width = right - left;
+
+            Point point = calculateTempPoint(left, left + width / 2, (int) itemList.get(i).getTonLeft());
             int top = point.y;
             int bottom = (DOTTED_LINE_MARGIN * 4 + MARGIN_LEFT_ITEM - (int) dp2px(1));
-            Rect rect = new Rect(left, top, right, bottom);
+            Rect rect = new Rect(left, top, left + width / 2, bottom);
             canvas.drawRect(rect, rectanglePaint);
+
+            Point point1 = calculateTempPoint(left + width / 2, right, (int) itemList.get(i).getTonRight());
+            int top1 = point1.y;
+
+            Rect rect1 = new Rect(left + width / 2, top1, right, bottom);
+            canvas.drawRect(rect1, rectanglePaintRight);
+
+
         }
 
     }

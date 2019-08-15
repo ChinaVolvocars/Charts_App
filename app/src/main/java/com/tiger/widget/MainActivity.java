@@ -52,7 +52,9 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < 20; i++) {
             rectangle30Item = new Rectangle30Item();
             double s = random.nextInt(26) % (maxTemp - minTemp + 1) + minTemp;
-            rectangle30Item.setTon(s);
+            double s2 = random.nextInt(26) % (maxTemp - minTemp + 1) + minTemp;
+            rectangle30Item.setTonLeft(s);
+            rectangle30Item.setTonRight(s2);
             rectangle30Item.setTime("07-" + i);
             itemList1.add(rectangle30Item);
         }
