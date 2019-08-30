@@ -1,0 +1,98 @@
+ext {
+
+
+    plugins = [
+            application: 'com.android.application',
+            library    : 'com.android.library',
+            maven      : 'com.github.dcendents.android-maven',
+            bintray    : 'com.jfrog.bintray'
+    ]
+
+
+    android = [
+            compileSdkVersion: 28,
+            minSdkVersion    : 17,
+            targetSdkVersion : 28,
+            buildToolsVersion: "28.0.3"
+    ]
+
+
+    lib_version = [
+            //第三方
+            supportLibVersion               : "28.0.0",
+            supportLibVersionForGlide       : "27.0.2",
+            supportDesignVersion            : "28.0.0",
+            supportRecyclerviewVersion      : "28.0.0",
+            butterknifeVersion              : "9.0.0",
+            retrofitVersion                 : "2.2.0",
+            pushVersion                     : '2.1.8',
+            permissionVersion               : '2.0.1',
+
+            //lib
+            loggingInterceptor              : "3.6.0",
+            constraintVersion               : "1.1.3",
+            glideVersion                    : "3.7.0",
+            glideTransformations            : "2.0.1",
+            photoviewVersion                : "1.2.4",
+            guavaVersion                    : "23.5-android",
+            greenDaoVersion                 : "3.2.0",
+            eventbusVersion                 : "3.0.0",
+            gsonVersion                     : "2.8.1",
+            //rx
+            rxjava                          : "1.2.0",
+            rxandroid                       : "1.2.1",
+            rxjava2                         : "2.2.8",
+            rxandroid2                      : "2.1.1",
+
+            //lib
+            commonVersion                   : '1.0.37',
+            audioVersion                    : "1.0.2",
+            badgeVersion                    : "1.0.3",
+            dialogsVersion                  : '1.0.7',
+            imageLoaderVersion              : '1.0.2',
+            imagePreviewVersion             : '1.0.2',
+            locationVersion                 : '1.0.5',
+            photoPickerVersion              : '1.0.6',
+            qrCodeVersion                   : '1.0.8',
+            thirdPartyVersion               : '1.0.2',
+            pgyVersion                      : '1.0.8',
+            systembartintVersion            : '1.0.4',
+
+            //widget
+            circleImageVersion              : '1.0.3',
+            convernientBannerVersion        : '1.0.2',
+            doublePageVersion               : '1.0.6',
+            emptyViewVersion                : '1.0.9',
+            flowLayoutVersion               : '1.0.2',
+            mpChartVersion                  : '1.0.2',
+            multiSwipeLayoutVersion         : '1.0.1',
+            pickViewVersion                 : '1.0.2',
+            pieChartVersion                 : '1.0.1',
+            ratingTerminatorVersion         : '1.0.2',
+            ratioImageVersion               : '1.0.1',
+            rightIndexBarVersion            : '1.0.2',
+            suggestTemplateLayoutVersion    : '1.0.1',
+            stickFrameLayoutVersion         : '1.0.1',
+            tabLayoutVersion                : '1.0.6',
+            tabSwitchLayoutVersion          : '1.0.1',
+            toggleButtonVersion             : '1.0.1',
+            viewpagerIndicatorVersion       : '1.0.12',
+            datetimepickerVersion           : '2.5.0',
+            roundedimageview                : "2.3.0",
+
+            //router
+            routerVersion                   : "1.0.3",
+            routerRxVersion                 : "1.0.2",
+            routerAnnotationVersion         : "1.0.3",
+            routerAnnotationProcessorVersion: "1.0.3",
+
+            //测试
+            runnerVersion                   : "1.0.2",
+            espressoVersion                 : "3.0.2",
+            junitVersion                    : "4.12",
+            //日志
+            loggerVersion                   : "2.2.0"
+    ]
+
+
+}

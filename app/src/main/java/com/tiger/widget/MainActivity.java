@@ -1,9 +1,10 @@
 package com.tiger.widget;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
         Materials30View materials30View = (Materials30View) findViewById(R.id.materials);
         Rectangle30View rectangle30View = (Rectangle30View) findViewById(R.id.rectangle);
+        MaterialsConsumptionView materialsconsumptionview = (MaterialsConsumptionView) findViewById(R.id.MaterialsConsumptionView);
         Random random = new Random();
 
         List<Materials30Item> itemList = new ArrayList<>();
@@ -61,6 +63,22 @@ public class MainActivity extends AppCompatActivity {
 
         rectangle30View.setData(itemList1);
 
+
+        List<MaterialsConsumption> itemList12 = new ArrayList<>();
+        MaterialsConsumption materialsconsumption;
+        Random random1 = new Random();
+//
+        for (int i = 0; i < 6; i++) {
+            materialsconsumption = new MaterialsConsumption();
+            double s = random1.nextInt((int) maxTemp) % (maxTemp - minTemp + 1) + minTemp;
+//            double s1 = random1.nextInt((int) maxTemp) % (maxTemp - minTemp + 1) + minTemp;
+            materialsconsumption.setTotalSignTon(s);
+            materialsconsumption.setTotalConsumeTon(s * 2);
+            materialsconsumption.setRawMaterial("水泥" + i);
+            itemList12.add(materialsconsumption);
+        }
+
+        materialsconsumptionview.setData(itemList12);
 
     }
 }

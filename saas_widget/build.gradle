@@ -1,0 +1,45 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    //
+//    buildToolsVersion "26.1.2"
+    defaultConfig {
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode 1
+        versionName "0.0.1"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        defaultPublishConfig 'release'
+        publishNonDefault true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:' + rootProject.ext.lib_version.espressoVersion, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testImplementation 'junit:junit:' + rootProject.ext.lib_version.junitVersion
+    api 'com.android.support:appcompat-v7:28.0.0'
+}
+
+publish {
+    repoName = 'saas'//远程仓库名字,不指明，默认是上传到maven
+    userOrg = 'tiger'//bintray.com用户名
+    groupId = 'com.tiger.saas.widget'
+    artifactId = 'charts'//项目名称，bintray上创建Package时填写的Name项
+    publishVersion = '0.0.1'//版本号
+    desc = 'saas charts library'
+    website = 'https://github.com/ChinaVolvocars/Charts_App'
+}
+

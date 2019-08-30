@@ -1,4 +1,4 @@
-package com.tiger.widget;
+package com.tiger.saas.widget;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -14,6 +14,8 @@ import android.util.TypedValue;
 import android.view.View;
 
 
+import com.tiger.saas.widget.utils.Dimension;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,17 +23,17 @@ import java.util.Random;
 
 public class Rectangle30View extends View {
 
-    public static final int MARGIN_LEFT_ITEM = (int) dp2px(14);
-    public static final int RECTANGLE_MARGIN_LEFT = (int) dp2px(21);
-    public static final int MARGIN_RIGHT_ITEM = (int) dp2px(14);
-    public static final int BOTTOM_TEXT_WIDTH = (int) dp2px(33);
-    public static final int BOTTOM_TEXT_HEIGHT = (int) dp2px(29);
-    public static final int BOTTOM_TEXT_MARGIN_TOP = (int) dp2px(7);
-    public static final int BOTTOM_TEXT_MARGIN_LIFT = (int) dp2px(10);
-    public static final int BOTTOM_TEXT_MARGIN_RIGHT = (int) dp2px(10);
-    public static final int RECTANGLE_WIDTH = (int) dp2px(23);
-    public static final int RECTANGLE_MARGIN = (int) dp2px(28);
-    public static final int DOTTED_LINE_MARGIN = (int) dp2px(40);
+    public static final int MARGIN_LEFT_ITEM = (int) Dimension.dp2px(14);
+    public static final int RECTANGLE_MARGIN_LEFT = (int) Dimension.dp2px(21);
+    public static final int MARGIN_RIGHT_ITEM = (int) Dimension.dp2px(14);
+    public static final int BOTTOM_TEXT_WIDTH = (int) Dimension.dp2px(33);
+    public static final int BOTTOM_TEXT_HEIGHT = (int) Dimension.dp2px(29);
+    public static final int BOTTOM_TEXT_MARGIN_TOP = (int) Dimension.dp2px(7);
+    public static final int BOTTOM_TEXT_MARGIN_LIFT = (int) Dimension.dp2px(10);
+    public static final int BOTTOM_TEXT_MARGIN_RIGHT = (int) Dimension.dp2px(10);
+    public static final int RECTANGLE_WIDTH = (int) Dimension.dp2px(23);
+    public static final int RECTANGLE_MARGIN = (int) Dimension.dp2px(28);
+    public static final int DOTTED_LINE_MARGIN = (int) Dimension.dp2px(40);
 
 
     private int rectangleColor = Color.parseColor("#50ABFF");
@@ -42,9 +44,9 @@ public class Rectangle30View extends View {
 
     private int bottomLineColor = Color.parseColor("#969FA9");
     private int textColor = Color.parseColor("#333333");
-    private int dottedLineHeight = (int) dp2px(1);
-    private int bottomLineHeight = (int) dp2px(1);
-    private float textSize = sp2px(11);
+    private int dottedLineHeight = (int) Dimension.dp2px(1);
+    private int bottomLineHeight = (int) Dimension.dp2px(1);
+    private float textSize = Dimension.sp2px(11);
 
     Paint dashedPaint = new Paint();
     Paint bottomLinePaint = new Paint();
@@ -100,17 +102,17 @@ public class Rectangle30View extends View {
         //虚线
         dashedPaint.setAntiAlias(true);
         dashedPaint.setStyle(Paint.Style.STROKE);
-        dashedPaint.setStrokeWidth(dp2px(1));
+        dashedPaint.setStrokeWidth(Dimension.dp2px(1));
         dashedPaint.setColor(dashedColor);
         dashedPaint.setPathEffect(new DashPathEffect(new float[]{6, 6}, 0));
 
         //底部的线
         bottomLinePaint.setAntiAlias(true);
-        bottomLinePaint.setStrokeWidth(dp2px(1));
+        bottomLinePaint.setStrokeWidth(Dimension.dp2px(1));
         bottomLinePaint.setColor(bottomLineColor);
 
         //底部的文字
-        textPaint.setTextSize(sp2px(12));
+        textPaint.setTextSize(Dimension.sp2px(12));
         textPaint.setColor(bottomTextColor);
         textPaint.setAntiAlias(true);
         //柱子
@@ -181,14 +183,14 @@ public class Rectangle30View extends View {
 
 
         for (int i = 0; i < itemCount; i++) {
-            int left = (int) dp2px(10) + MARGIN_LEFT_ITEM + i * (BOTTOM_TEXT_WIDTH + BOTTOM_TEXT_MARGIN_LIFT + BOTTOM_TEXT_MARGIN_RIGHT);
-            int right = left + (BOTTOM_TEXT_WIDTH + BOTTOM_TEXT_MARGIN_LIFT + BOTTOM_TEXT_MARGIN_RIGHT) - (int) dp2px(10) * 2;
+            int left = (int) Dimension.dp2px(10) + MARGIN_LEFT_ITEM + i * (BOTTOM_TEXT_WIDTH + BOTTOM_TEXT_MARGIN_LIFT + BOTTOM_TEXT_MARGIN_RIGHT);
+            int right = left + (BOTTOM_TEXT_WIDTH + BOTTOM_TEXT_MARGIN_LIFT + BOTTOM_TEXT_MARGIN_RIGHT) - (int) Dimension.dp2px(10) * 2;
 
             int width = right - left;
 
             Point point = calculateTempPoint(left, left + width / 2, (int) itemList.get(i).getTonLeft());
             int top = point.y;
-            int bottom = (DOTTED_LINE_MARGIN * 4 + MARGIN_LEFT_ITEM - (int) dp2px(1));
+            int bottom = (DOTTED_LINE_MARGIN * 4 + MARGIN_LEFT_ITEM - (int) Dimension.dp2px(1));
             Rect rect = new Rect(left, top, left + width / 2, bottom);
             canvas.drawRect(rect, rectanglePaint);
 
@@ -207,7 +209,7 @@ public class Rectangle30View extends View {
     private Point calculateTempPoint(int left, int right, int temp) {
         double minHeight = tempBaseTop;
         double maxHeight = tempBaseBottom;
-        double tempY = maxHeight - (temp - minTemp) * 1.0 / (maxTemp - minTemp) * (maxHeight - minHeight);
+        double tempY = temp == 0 ? tempBaseBottom : maxHeight - (temp - minTemp) * 1.0 / (maxTemp - minTemp) * (maxHeight - minHeight);
         Point point = new Point((left + right) / 2, (int) tempY);
         return point;
     }
@@ -224,8 +226,8 @@ public class Rectangle30View extends View {
             int baseline = (targetRect.bottom + targetRect.top - fontMetrics.bottom - fontMetrics.top) / 2;
             textPaint.setTextAlign(Paint.Align.CENTER);
 
-//            String text = itemList.get(i).getTime();
-            String text = "10-" + i;
+            String text = itemList.get(i).getTime();
+//            String text = "10-" + i;
             canvas.drawText(text, targetRect.centerX(), baseline, textPaint);
 
         }
@@ -236,44 +238,5 @@ public class Rectangle30View extends View {
         itemCount = itemList.size();
         invalidate();
         requestLayout();
-    }
-
-
-    /**
-     * dp单位转换成 px
-     *
-     * @param dp
-     * @return
-     */
-    public static float dp2px(float dp) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, Resources.getSystem().getDisplayMetrics());
-    }
-
-    /**
-     * sp 转换成 px
-     *
-     * @param sp
-     * @return
-     */
-    public float sp2px(float sp) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, Resources.getSystem().getDisplayMetrics());
-    }
-
-    /**
-     * 获取屏幕宽度
-     *
-     * @return width of the screen.
-     */
-    public static int getScreenWidth() {
-        return Resources.getSystem().getDisplayMetrics().widthPixels;
-    }
-
-    /**
-     * 获取屏幕高度
-     *
-     * @return heiht of the screen.
-     */
-    public static int getScreenHeight() {
-        return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
 }

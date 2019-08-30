@@ -1,7 +1,6 @@
-package com.tiger.widget;
+package com.tiger.saas.widget;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -9,8 +8,11 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.TypedValue;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+
+import com.tiger.saas.widget.utils.Dimension;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,21 +24,24 @@ import java.util.Random;
  */
 public class MaterialsConsumptionView extends View {
 
-    public static final int LEFT_TEXT_HEIGHT = (int) dp2px(17);
-    public static final int LEFT_TEXT_PADDING_TOP = (int) dp2px(10);
-    public static final int LEFT_TEXT_PADDING_BOTTOM = (int) dp2px(10);
-    public static final int LEFT_TEXT_WIDTH = (int) dp2px(50);
-    public static final int LINE_WIDTH = (int) dp2px(1);
-    public static final int MARGIN_RIGHT = (int) dp2px(14);
-    public static final int BOTTOME_TEXT_HEIGHT = (int) dp2px(15);
-    public static final int BOTTOM_TEXT_PADDING_TOP = (int) dp2px(7);
-    public static final int BOTTOM_TEXT_PADDING_BOTTOM = (int) dp2px(7);
+    private String TAG = MaterialsConsumptionView.class.getSimpleName();
 
 
-    private float LEFT_TEXT_SIZE = sp2px(12);
-    private float BOTTOM_TEXT_SIZE = sp2px(11);
-    private float PURCHASE_TEXT_SIZE = sp2px(13);
-    private float CONSUME_TEXT_SIZE = sp2px(13);
+    public static final int LEFT_TEXT_HEIGHT = (int) Dimension.dp2px(17);
+    public static final int LEFT_TEXT_PADDING_TOP = (int) Dimension.dp2px(10);
+    public static final int LEFT_TEXT_PADDING_BOTTOM = (int) Dimension.dp2px(10);
+    public static final int LEFT_TEXT_WIDTH = (int) Dimension.dp2px(50);
+    public static final int LINE_WIDTH = (int) Dimension.dp2px(1);
+    public static final int MARGIN_RIGHT = (int) Dimension.dp2px(14);
+    public static final int BOTTOME_TEXT_HEIGHT = (int) Dimension.dp2px(15);
+    public static final int BOTTOM_TEXT_PADDING_TOP = (int) Dimension.dp2px(7);
+    public static final int BOTTOM_TEXT_PADDING_BOTTOM = (int) Dimension.dp2px(7);
+
+
+    private float LEFT_TEXT_SIZE = Dimension.sp2px(12);
+    private float BOTTOM_TEXT_SIZE = Dimension.sp2px(11);
+    private float PURCHASE_TEXT_SIZE = Dimension.sp2px(13);
+    private float CONSUME_TEXT_SIZE = Dimension.sp2px(13);
 
     private Paint leftTextPaint = new Paint();
     private Paint bottomTextPaint = new Paint();
@@ -60,6 +65,9 @@ public class MaterialsConsumptionView extends View {
 
     private int tempBaseTop;  //折线的左边x坐标
     private int tempBaseBottom; //折线的右边x坐标
+
+    private int selectPosition = -1;
+
 
     public MaterialsConsumptionView(Context context) {
         this(context, null);
@@ -95,7 +103,7 @@ public class MaterialsConsumptionView extends View {
         }
 
 
-        mWidth = getScreenWidth();
+        mWidth = Dimension.getScreenWidth();
         mHeight = itemCount * (LEFT_TEXT_HEIGHT + LEFT_TEXT_PADDING_TOP + LEFT_TEXT_PADDING_BOTTOM) + 100;
 
         tempBaseTop = LEFT_TEXT_WIDTH;
@@ -108,13 +116,13 @@ public class MaterialsConsumptionView extends View {
         linePaint.setColor(lineColor);
         linePaint.setAntiAlias(true);
         linePaint.setStyle(Paint.Style.STROKE);
-        linePaint.setStrokeWidth(dp2px(1));
+        linePaint.setStrokeWidth(Dimension.dp2px(1));
         //虚线
 
         //虚线
         dottedLinePaint.setAntiAlias(true);
         dottedLinePaint.setStyle(Paint.Style.STROKE);
-        dottedLinePaint.setStrokeWidth(dp2px(1));
+        dottedLinePaint.setStrokeWidth(Dimension.dp2px(1));
         dottedLinePaint.setColor(dottedLineColor);
         dottedLinePaint.setPathEffect(new DashPathEffect(new float[]{6, 6}, 0));
 
@@ -132,7 +140,7 @@ public class MaterialsConsumptionView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        mWidth = getScreenWidth();
+        mWidth = Dimension.getScreenWidth();
         setMeasuredDimension(mWidth, mHeight);
     }
 
@@ -148,6 +156,48 @@ public class MaterialsConsumptionView extends View {
         onDrawLine(canvas);
         onDrawRectangle(canvas);
         onDrawBottomText(canvas);
+
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        int x = (int) event.getX();
+        int y = (int) event.getY();
+        int left = 0;
+        int right = 0;
+        int top = 0;
+        int bottom = 0;
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                for (int i = 0; i < itemCount; i++) {
+                    left = LEFT_TEXT_WIDTH;
+                    right = left + getX((int) itemList.get(i).getTotalConsumeTon()) + 1;
+                    top = i * (LEFT_TEXT_HEIGHT + LEFT_TEXT_PADDING_TOP + LEFT_TEXT_PADDING_BOTTOM) + (int) Dimension.dp2px(10);
+                    bottom = i * (LEFT_TEXT_HEIGHT + LEFT_TEXT_PADDING_TOP + LEFT_TEXT_PADDING_BOTTOM) + LEFT_TEXT_HEIGHT + LEFT_TEXT_PADDING_TOP + LEFT_TEXT_PADDING_BOTTOM - (int) Dimension.dp2px(10);
+                    Rect rect = new Rect(left, top, right, bottom);
+                    int right1 = left + getX((int) itemList.get(i).getTotalSignTon()) + 1;
+                    Rect rect1 = new Rect(left, top, right1, bottom);
+                    if (rect1.contains(x, y) || rect.contains(x, y)) {
+                        selectPosition = i;
+                        if (clickListener != null) {
+                            clickListener.onClick(i);
+                        }
+                        invalidate();
+                    }
+                }
+                break;
+
+            case MotionEvent.ACTION_CANCEL:
+                selectPosition = -1;
+                invalidate();
+                break;
+        }
+
+
+        return true;
     }
 
     private void onDrawLeftText(Canvas canvas) {
@@ -215,39 +265,33 @@ public class MaterialsConsumptionView extends View {
 
         for (int i = 0; i < itemCount; i++) {
             int left = LEFT_TEXT_WIDTH;
-            Point point = calculateTempPoint(left, left, (int) itemList.get(i).getTotalConsumeTon());
-            int right = left + point.y + 1;
-            int top = i * (LEFT_TEXT_HEIGHT + LEFT_TEXT_PADDING_TOP + LEFT_TEXT_PADDING_BOTTOM) + (int) dp2px(10);
-            int bottom = i * (LEFT_TEXT_HEIGHT + LEFT_TEXT_PADDING_TOP + LEFT_TEXT_PADDING_BOTTOM) + LEFT_TEXT_HEIGHT + LEFT_TEXT_PADDING_TOP + LEFT_TEXT_PADDING_BOTTOM - (int) dp2px(10);
+            int right = left + getX((int) itemList.get(i).getTotalConsumeTon()) + 1;
+            int top = i * (LEFT_TEXT_HEIGHT + LEFT_TEXT_PADDING_TOP + LEFT_TEXT_PADDING_BOTTOM) + (int) Dimension.dp2px(10);
+            int bottom = i * (LEFT_TEXT_HEIGHT + LEFT_TEXT_PADDING_TOP + LEFT_TEXT_PADDING_BOTTOM) + LEFT_TEXT_HEIGHT + LEFT_TEXT_PADDING_TOP + LEFT_TEXT_PADDING_BOTTOM - (int) Dimension.dp2px(10);
             Rect rect = new Rect(left, top, right, bottom);
-
-
-            Point point1 = calculateTempPoint(left, left, (int) itemList.get(i).getTotalSignTon());
-            int right1 = left + point1.y + 1;
-
+            int right1 = left + getX((int) itemList.get(i).getTotalSignTon()) + 1;
             Rect rect1 = new Rect(left, top, right1, bottom);
-            canvas.drawRect(rect1, grayRectanglePaint);
-            canvas.drawRect(rect, blueRectanglePaint);
+            canvas.drawRect(rect, grayRectanglePaint);
+            canvas.drawRect(rect1, blueRectanglePaint);
+
+            if (i == selectPosition) {
+                onDrawFloatText(canvas);
+            }
         }
+    }
 
+    private void onDrawFloatText(Canvas canvas) {
 
     }
 
-
-    // [16, 13, 17, 12, 25, 12, 23, 26, 16, 13, 18, 19, 22, 19, 21, 14, 14, 19, 17, 23, 17, 14, 13, 18, 19, 19, 13, 14, 12, 11, 11]
-    private Point calculateTempPoint(int left, int right, int temp) {
-        double minHeight = tempBaseTop;
-        double maxHeight = tempBaseBottom;
-        double tempY = maxHeight - (temp - minTemp) * 1.0 / (maxTemp - minTemp) * (maxHeight - minHeight);
-        Point point = new Point((left + right) / 2, (int) tempY);
-        return point;
+    private int getX(int temp) {
+        double v = (tempBaseBottom - tempBaseTop) / maxTemp * temp;
+        return (int) v;
     }
-
 
     private void onDrawBottomText(Canvas canvas) {
 
     }
-
 
     public void setData(List<MaterialsConsumption> itemList) {
         if (itemList.size() == 0) {
@@ -256,49 +300,14 @@ public class MaterialsConsumptionView extends View {
             this.itemList = itemList;
             itemCount = itemList.size();
         }
-
         invalidate();
         requestLayout();
-
     }
 
+    private OnMaterialsClickListener clickListener;
 
-    /**
-     * dp单位转换成 px
-     *
-     * @param dp
-     * @return
-     */
-    public static float dp2px(float dp) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, Resources.getSystem().getDisplayMetrics());
-    }
-
-    /**
-     * sp 转换成 px
-     *
-     * @param sp
-     * @return
-     */
-    public float sp2px(float sp) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, Resources.getSystem().getDisplayMetrics());
-    }
-
-    /**
-     * 获取屏幕宽度
-     *
-     * @return width of the screen.
-     */
-    public static int getScreenWidth() {
-        return Resources.getSystem().getDisplayMetrics().widthPixels;
-    }
-
-    /**
-     * 获取屏幕高度
-     *
-     * @return heiht of the screen.
-     */
-    public static int getScreenHeight() {
-        return Resources.getSystem().getDisplayMetrics().heightPixels;
+    public void setOnMaterialsClickListener(OnMaterialsClickListener clickListener) {
+        this.clickListener = clickListener;
     }
 
 
